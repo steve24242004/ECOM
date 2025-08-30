@@ -1,26 +1,40 @@
-const express = require('express');
-const router = express.Router();
-const Test = require('../models/Test');
+// backend/routes/testRoutes.js
+import express from "express";
+import Test from "../models/Test.js";
 
-// Create dummy data
-router.post('/', async (req, res) => {
+const router = express.Router();
+
+// Create dummy test data
+// Create a new product
+router.post("/", async (req, res) => {
   try {
-    const newTest = new Test({ name: req.body.name });
-    const saved = await newTest.save();
-    res.json(saved);
+    const { name, price, description, category, inStock } = req.body;
+
+    // Create product from schema
+    const newProduct = new Product({
+      name,
+      price,
+      description,
+      category,
+      inStock,
+    });
+
+    const savedProduct = await newProduct.save();
+    return res.status(201).json(savedProduct);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    return res.status(500).json({ message: err.message });
   }
 });
+
 
 // Get all test data
-router.get('/', async (req, res) => {
+router.get("/", async (_req, res) => {
   try {
     const all = await Test.find();
-    res.json(all);
+    return res.json(all);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    return res.status(500).json({ message: err.message });
   }
 });
 
-module.exports = router;
+export default router;
