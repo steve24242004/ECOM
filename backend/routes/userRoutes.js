@@ -5,6 +5,7 @@ import {
   registerUser,
   loginUser,
   getUserProfile,
+  updateUserProfile,
 } from '../controllers/userController.js';
 import { protect } from '../middleware/authMiddleware.js'; // We will create this next
 
@@ -15,6 +16,6 @@ router.route('/login').post(loginUser);
 
 // For the profile, we chain .get() and add our 'protect' middleware.
 // The request will first go through protect(), then to getUserProfile().
-router.route('/profile').get(protect, getUserProfile);
+router.route('/profile').get(protect, getUserProfile).put(protect, updateUserProfile);
 
 export default router;
