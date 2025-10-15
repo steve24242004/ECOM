@@ -1,16 +1,28 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 
-export const loginUser = createAsyncThunk('auth/login', async ({ email, password }) => {
-  const { data } = await axios.post('/api/users/login', { email, password });
-  localStorage.setItem('userInfo', JSON.stringify(data));
-  return data;
+export const loginUser = createAsyncThunk('auth/login', async ({ email, password }, { rejectWithValue }) => {
+  try {
+    const { data } = await axios.post('/api/users/login', { email, password });
+    localStorage.setItem('userInfo', JSON.stringify(data));
+    return data;
+  } catch (error) {
+    return rejectWithValue(
+      error.response?.data?.message || error.message || 'Login failed'
+    );
+  }
 });
 
-export const registerUser = createAsyncThunk('auth/register', async ({ name, email, password }) => {
-  const { data } = await axios.post('/api/users/register', { name, email, password });
-  localStorage.setItem('userInfo', JSON.stringify(data));
-  return data;
+export const registerUser = createAsyncThunk('auth/register', async ({ name, email, password }, { rejectWithValue }) => {
+  try {
+    const { data } = await axios.post('/api/users/register', { name, email, password });
+    localStorage.setItem('userInfo', JSON.stringify(data));
+    return data;
+  } catch (error) {
+    return rejectWithValue(
+      error.response?.data?.message || error.message || 'Registration failed'
+    );
+  }
 });
 
 export const updateProfile = createAsyncThunk('auth/updateProfile', async ({ name, email, password }, { getState }) => {
@@ -53,7 +65,7 @@ const authSlice = createSlice({
       })
       .addCase(loginUser.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message;
+        state.error = action.payload;
       })
       .addCase(registerUser.pending, (state) => {
         state.loading = true;
@@ -65,7 +77,7 @@ const authSlice = createSlice({
       })
       .addCase(registerUser.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message;
+        state.error = action.payload;
       })
       .addCase(updateProfile.pending, (state) => {
         state.loading = true;

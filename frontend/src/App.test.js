@@ -1,8 +1,25 @@
 import { render, screen } from '@testing-library/react';
-import App from './App';
+import { Provider } from 'react-redux';
+import { configureStore } from '@reduxjs/toolkit';
+import App from './App.jsx';
+import authSlice from './store/authSlice';
+import productSlice from './store/productSlice';
+import cartSlice from './store/cartSlice';
+import orderSlice from './store/orderSlice';
 
-test('renders learn react link', () => {
-  render(<App />);
-  const linkElement = screen.getByText(/learn react/i);
-  expect(linkElement).toBeInTheDocument();
+const store = configureStore({
+  reducer: {
+    auth: authSlice,
+    products: productSlice,
+    cart: cartSlice,
+    order: orderSlice,
+  },
+});
+
+test('renders app', () => {
+  render(
+    <Provider store={store}>
+      <App />
+    </Provider>
+  );
 });
