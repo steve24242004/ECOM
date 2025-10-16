@@ -93,21 +93,28 @@ const Header = () => {
                 {isAdminDropdownOpen && (
                   <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50">
                     <Link
-                      to="/admin/userlist"
+                      to="/admin"
+                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                      onClick={() => setIsAdminDropdownOpen(false)}
+                    >
+                      Dashboard
+                    </Link>
+                    <Link
+                      to="/admin/users"
                       className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                       onClick={() => setIsAdminDropdownOpen(false)}
                     >
                       Users
                     </Link>
                     <Link
-                      to="/admin/productlist"
+                      to="/admin/products"
                       className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                       onClick={() => setIsAdminDropdownOpen(false)}
                     >
                       Products
                     </Link>
                     <Link
-                      to="/admin/orderlist"
+                      to="/admin/orders"
                       className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                       onClick={() => setIsAdminDropdownOpen(false)}
                     >
