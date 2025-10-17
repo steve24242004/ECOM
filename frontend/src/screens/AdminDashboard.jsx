@@ -27,6 +27,13 @@ const AdminDashboard = () => {
             <p>View and update order status</p>
           </div>
         </Link>
+        
+        <Link to="/admin/categories" className="bg-orange-500 hover:bg-orange-600 text-white p-6 rounded-lg shadow-lg transition-colors">
+          <div className="text-center">
+            <h2 className="text-xl font-semibold mb-2">Manage Categories</h2>
+            <p>Add and manage product categories</p>
+          </div>
+        </Link>
       </div>
     </div>
   );

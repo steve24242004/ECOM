@@ -1,13 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { createProduct, updateProduct, deleteProduct } from '../store/adminSlice';
-import { fetchProducts } from '../store/productSlice';
+import { fetchProducts, createProduct, updateProduct, deleteProduct } from '../store/productSlice';
+import { fetchCategories } from '../store/categorySlice';
+import ProductList from '../components/ProductList';
 import Loader from '../components/Loader';
 import Message from '../components/Message';
 
 const AdminProducts = () => {
   const dispatch = useDispatch();
   const { products, loading, error } = useSelector((state) => state.products);
+  const { categories } = useSelector((state) => state.categories);
   const [showForm, setShowForm] = useState(false);
   const [editingProduct, setEditingProduct] = useState(null);
   const [formData, setFormData] = useState({
@@ -22,6 +24,7 @@ const AdminProducts = () => {
 
   useEffect(() => {
     dispatch(fetchProducts());
+    dispatch(fetchCategories());
   }, [dispatch]);
 
   const handleSubmit = (e) => {
@@ -121,14 +124,17 @@ const AdminProducts = () => {
               className="border rounded px-3 py-2"
               required
             />
-            <input
-              type="text"
-              placeholder="Category"
+            <select
               value={formData.category}
               onChange={(e) => setFormData({...formData, category: e.target.value})}
               className="border rounded px-3 py-2"
               required
-            />
+            >
+              <option value="">Select Category</option>
+              {categories.map((cat) => (
+                <option key={cat._id} value={cat._id}>{cat.name}</option>
+              ))}
+            </select>
             <input
               type="number"
               placeholder="Count In Stock"
@@ -157,32 +163,7 @@ const AdminProducts = () => {
         </div>
       )}
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {products.map((product) => (
-          <div key={product._id} className="bg-white rounded-lg shadow-md overflow-hidden">
-            <img src={product.image} alt={product.name} className="w-full h-48 object-cover" />
-            <div className="p-4">
-              <h3 className="font-semibold text-lg mb-2">{product.name}</h3>
-              <p className="text-gray-600 mb-2">${product.price}</p>
-              <p className="text-sm text-gray-500 mb-4">Stock: {product.countInStock}</p>
-              <div className="flex gap-2">
-                <button
-                  onClick={() => handleEdit(product)}
-                  className="bg-yellow-500 hover:bg-yellow-600 text-white px-3 py-1 rounded text-sm"
-                >
-                  Edit
-                </button>
-                <button
-                  onClick={() => handleDelete(product._id)}
-                  className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-sm"
-                >
-                  Delete
-                </button>
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
+      <ProductList isAdmin={true} onEdit={handleEdit} onDelete={handleDelete} />
     </div>
   );
 };
